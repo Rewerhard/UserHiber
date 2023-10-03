@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -84,16 +85,16 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = null;
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            users = session.createQuery("from User", User.class).getResultList();
-            session.getTransaction().commit();
+            List<User> users = session.createQuery("from User", User.class).getResultList();
             users.forEach(System.out::println);
+            session.getTransaction().commit();
+            return users;
         } catch (Exception e) {
             System.out.println("Exception:" + e.getMessage());
+            return new ArrayList<>();
         }
-        return users;
     }
 
 
